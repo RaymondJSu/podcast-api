@@ -14,8 +14,6 @@ app.use(cors());
 
 // MongoDB connection setup
 const client = new MongoClient(process.env.MONGO_URI);
-const url = `https://podcast-api-oxb4.onrender.com/api/episodes`;
-const interval = 300000; // Interval in milliseconds (30 seconds)
 
 app.get('/api/episodes', async (req, res) => {
   try {
@@ -36,15 +34,21 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-function reloadWebsite() {
-  axios.get(url)
-    .then(response => {
-      console.log(`Reloaded at ${new Date().toISOString()}: Status Code ${response.status}`);
-    })
-    .catch(error => {
-      console.error(`Error reloading at ${new Date().toISOString()}:`, error.message);
-    });
-}
+// Self-ping function to keep the service awake
+const keepAlive = () => {
+  const apiUrl = 'https://podcast-api-oxb4.onrender.com/api/episodes';
+  setInterval(async () => {
+    try {
+      const response = await axios.get(apiUrl);
+      console.log(`Ping successful: ${response.status}`);
+    } catch (error) {
+      console.error('Error pinging API:', error);
+    }
+  }, 5 * 60 * 1000); // Ping every 5 minutes (5 * 60 * 1000 milliseconds)
+};
 
-
-setInterval(reloadWebsite, interval);
+// Call keepAlive after server starts
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+  keepAlive();  // Start self-pinging once the server is up
+});
