@@ -11,6 +11,8 @@ app.use(cors());
 
 // MongoDB connection setup
 const client = new MongoClient(process.env.MONGO_URI);
+const url = `https://podcast-api-oxb4.onrender.com`;
+const interval = 30000; // Interval in milliseconds (30 seconds)
 
 app.get('/api/episodes', async (req, res) => {
   try {
@@ -30,3 +32,16 @@ app.get('/api/episodes', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+function reloadWebsite() {
+  axios.get(url)
+    .then(response => {
+      console.log(`Reloaded at ${new Date().toISOString()}: Status Code ${response.status}`);
+    })
+    .catch(error => {
+      console.error(`Error reloading at ${new Date().toISOString()}:`, error.message);
+    });
+}
+
+
+setInterval(reloadWebsite, interval);
