@@ -13,7 +13,7 @@ app.use(cors());
 // MongoDB connection setup
 const client = new MongoClient(process.env.MONGO_URI);
 const url = `https://podcast-api-oxb4.onrender.com/api/episodes`;
-const interval = 30000; // Interval in milliseconds (30 seconds)
+const interval = 300000; // Interval in milliseconds (30 seconds)
 
 app.get('/api/episodes', async (req, res) => {
   try {
