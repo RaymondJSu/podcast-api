@@ -2,10 +2,10 @@ const express = require('express');
 const { MongoClient } = require('mongodb');
 const cors = require('cors');
 require('dotenv').config();
+const axios = require('axios');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const axios = require('axios');
 
 // Enable CORS for requests from your frontend
 app.use(cors());
@@ -27,11 +27,6 @@ app.get('/api/episodes', async (req, res) => {
   }
 });
 
-// Start the server
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
-
 // Self-ping function to keep the service awake
 const keepAlive = () => {
   const apiUrl = 'https://podcast-api-oxb4.onrender.com/api/episodes';
@@ -45,7 +40,7 @@ const keepAlive = () => {
   }, 5 * 60 * 1000); // Ping every 5 minutes (5 * 60 * 1000 milliseconds)
 };
 
-// Call keepAlive after server starts
+// Start the server and call keepAlive after the server is running
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   keepAlive();  // Start self-pinging once the server is up
