@@ -16,7 +16,7 @@ app.get('/api/episodes', async (req, res) => {
   try {
     await client.connect();
     const db = client.db('podcast_summarizer');
-    const episodes = await db.collection('episodes').find().sort({ publish_date: -1 }).toArray();
+    const episodes = await db.collection('episodes').find().sort({ timestamp: -1 }).toArray();
     res.json(episodes);
   } catch (error) {
     console.error('Error fetching episodes:', error);
