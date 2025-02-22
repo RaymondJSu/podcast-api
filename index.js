@@ -17,7 +17,7 @@ app.get('/api/episodes', async (req, res) => {
   try {
     await client.connect();
     const db = client.db('podcast_summarizer');
-    const episodes = await db.collection('episodes').find().sort({ timestamp: -1 }).toArray();
+    const episodes = await db.collection('episodes').find().sort({ timestamp: -1 }).limit(30).toArray();
     res.json(episodes);
   } catch (error) {
     console.error('Error fetching episodes:', error);
@@ -37,7 +37,7 @@ const keepAlive = () => {
     } catch (error) {
       console.error('Error pinging API:', error);
     }
-  }, 5 * 60 * 1000); // Ping every 5 minutes (5 * 60 * 1000 milliseconds)
+  }, 14 * 60 * 1000); // Ping every 14 minutes (5 * 60 * 1000 milliseconds)
 };
 
 // Start the server and call keepAlive after the server is running
